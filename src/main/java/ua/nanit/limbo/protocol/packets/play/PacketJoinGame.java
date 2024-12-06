@@ -20,6 +20,7 @@ package ua.nanit.limbo.protocol.packets.play;
 import ua.nanit.limbo.protocol.ByteMessage;
 import ua.nanit.limbo.protocol.PacketOut;
 import ua.nanit.limbo.protocol.registry.Version;
+import ua.nanit.limbo.server.Log;
 import ua.nanit.limbo.world.DimensionRegistry;
 
 public class PacketJoinGame implements PacketOut {
@@ -301,7 +302,7 @@ public class PacketJoinGame implements PacketOut {
             msg.writeBoolean(secureProfile);
         }
 
-        if (version.moreOrEqual(Version.V1_21_2)) {
+        if (version.equals(Version.V1_21_2)) {
             msg.writeBoolean(isHardcore);
             msg.writeStringsArray(worldNames);
             msg.writeVarInt(maxPlayers);
@@ -311,6 +312,28 @@ public class PacketJoinGame implements PacketOut {
             msg.writeBoolean(enableRespawnScreen);
             msg.writeBoolean(limitedCrafting);
             msg.writeVarInt(dimensionRegistry.getDimension_1_21().getId());
+            msg.writeString(worldName);
+            msg.writeLong(hashedSeed);
+            msg.writeByte(gameMode);
+            msg.writeByte(previousGameMode);
+            msg.writeBoolean(isDebug);
+            msg.writeBoolean(isFlat);
+            msg.writeBoolean(false);
+            msg.writeVarInt(0);
+            msg.writeVarInt(0);
+            msg.writeBoolean(secureProfile);
+        }
+
+        if (version.moreOrEqual(Version.V1_21_4)) {
+            msg.writeBoolean(isHardcore);
+            msg.writeStringsArray(worldNames);
+            msg.writeVarInt(maxPlayers);
+            msg.writeVarInt(viewDistance);
+            msg.writeVarInt(viewDistance); // Simulation Distance
+            msg.writeBoolean(reducedDebugInfo);
+            msg.writeBoolean(enableRespawnScreen);
+            msg.writeBoolean(limitedCrafting);
+            msg.writeVarInt(dimensionRegistry.getDimension_1_21_4().getId());
             msg.writeString(worldName);
             msg.writeLong(hashedSeed);
             msg.writeByte(gameMode);

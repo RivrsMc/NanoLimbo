@@ -20,6 +20,7 @@ package ua.nanit.limbo.protocol.packets.play;
 import ua.nanit.limbo.protocol.ByteMessage;
 import ua.nanit.limbo.protocol.Packet;
 import ua.nanit.limbo.protocol.registry.Version;
+import ua.nanit.limbo.server.Log;
 
 public class PacketKeepAlive implements Packet {
 
