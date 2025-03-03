@@ -51,7 +51,7 @@ public class PacketEncoder extends MessageToByteEncoder<Packet> {
         }
 
         if (packetId == -1) {
-            Log.warning("Undefined packet class: %s[0x%s] (%d bytes)", packet.getClass().getName(), Integer.toHexString(packetId), msg.readableBytes());
+            Log.warning("Undefined packet class: {}[0x{}] ({} bytes)", packet.getClass().getName(), Integer.toHexString(packetId), msg.readableBytes());
             return;
         }
 
@@ -61,10 +61,11 @@ public class PacketEncoder extends MessageToByteEncoder<Packet> {
             packet.encode(msg, version);
 
             if (Log.isDebug()) {
-                Log.debug("Sending %s[0x%s] packet (%d bytes)", packet.toString(), Integer.toHexString(packetId), msg.readableBytes());
+                Log.debug("Sending {}[0x{}] packet ({} bytes)", packet.toString(), Integer.toHexString(packetId), msg.readableBytes());
             }
         } catch (Exception e) {
-            Log.error("Cannot encode packet 0x%s: %s", Integer.toHexString(packetId), e.getMessage());
+            Log.error("Cannot encode packet 0x{}: {}", Integer.toHexString(packetId), e.getMessage());
+            e.printStackTrace();
         }
     }
 

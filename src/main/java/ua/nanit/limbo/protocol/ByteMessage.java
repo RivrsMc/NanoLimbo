@@ -17,13 +17,6 @@
 
 package ua.nanit.limbo.protocol;
 
-import io.netty.buffer.*;
-import io.netty.handler.codec.DecoderException;
-import io.netty.handler.codec.EncoderException;
-import io.netty.util.ByteProcessor;
-import net.kyori.adventure.nbt.*;
-import ua.nanit.limbo.protocol.registry.Version;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -38,6 +31,14 @@ import java.util.Arrays;
 import java.util.BitSet;
 import java.util.EnumSet;
 import java.util.UUID;
+
+import io.netty.buffer.*;
+import io.netty.handler.codec.DecoderException;
+import io.netty.handler.codec.EncoderException;
+import io.netty.util.ByteProcessor;
+import net.kyori.adventure.nbt.*;
+import net.kyori.adventure.text.Component;
+import ua.nanit.limbo.protocol.registry.Version;
 
 public class ByteMessage extends ByteBuf {
 

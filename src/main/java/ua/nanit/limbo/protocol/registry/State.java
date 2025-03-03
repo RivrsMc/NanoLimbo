@@ -379,6 +379,9 @@ public enum State {
             clientBound.register(PacketDestroyEntities::new,
                     map(0x47, V1_21_2, V1_21_4)
             );
+            clientBound.register(PacketMetadata::new,
+                    map(0x5D, V1_21_2, V1_21_4)
+            );
         }
     };
 

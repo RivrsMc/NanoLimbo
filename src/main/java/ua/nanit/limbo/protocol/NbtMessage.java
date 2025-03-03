@@ -1,7 +1,11 @@
 package ua.nanit.limbo.protocol;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.kyori.adventure.nbt.BinaryTag;
 
+@Setter
+@Getter
 public class NbtMessage {
 
     private String json;
@@ -12,19 +16,4 @@ public class NbtMessage {
         this.tag = tag;
     }
 
-    public String getJson() {
-        return json;
-    }
-
-    public void setJson(String json) {
-        this.json = json;
-    }
-
-    public BinaryTag getTag() {
-        return tag;
-    }
-
-    public void setTag(BinaryTag tag) {
-        this.tag = tag;
-    }
 }
