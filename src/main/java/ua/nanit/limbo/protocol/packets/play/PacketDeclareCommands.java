@@ -17,22 +17,20 @@
 
 package ua.nanit.limbo.protocol.packets.play;
 
+import java.util.List;
+
+import lombok.Setter;
 import ua.nanit.limbo.protocol.ByteMessage;
 import ua.nanit.limbo.protocol.PacketOut;
 import ua.nanit.limbo.protocol.registry.Version;
 
-import java.util.List;
-
 /**
  * Packet for 1.13+
  */
+@Setter
 public class PacketDeclareCommands implements PacketOut {
 
     private List<String> commands;
-
-    public void setCommands(List<String> commands) {
-        this.commands = commands;
-    }
 
     @Override
     public void encode(ByteMessage msg, Version version) {

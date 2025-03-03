@@ -17,6 +17,7 @@
 
 package ua.nanit.limbo.protocol.packets.play;
 
+import lombok.Setter;
 import ua.nanit.limbo.protocol.ByteMessage;
 import ua.nanit.limbo.protocol.PacketOut;
 import ua.nanit.limbo.protocol.registry.Version;
@@ -24,6 +25,7 @@ import ua.nanit.limbo.server.data.Title;
 
 public class PacketTitleLegacy implements PacketOut {
 
+    @Setter
     private Action action;
     private final PacketTitleSetTitle title;
     private final PacketTitleSetSubTitle subtitle;
@@ -33,10 +35,6 @@ public class PacketTitleLegacy implements PacketOut {
         this.title = new PacketTitleSetTitle();
         this.subtitle = new PacketTitleSetSubTitle();
         this.times = new PacketTitleTimes();
-    }
-
-    public void setAction(Action action) {
-        this.action = action;
     }
 
     public void setTitle(Title title) {

@@ -17,10 +17,14 @@
 
 package ua.nanit.limbo.protocol.packets.play;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import ua.nanit.limbo.protocol.ByteMessage;
 import ua.nanit.limbo.protocol.PacketOut;
 import ua.nanit.limbo.protocol.registry.Version;
 
+@NoArgsConstructor
+@AllArgsConstructor
 public class PacketPlayerPositionAndLook implements PacketOut {
 
     private double x;
@@ -29,18 +33,6 @@ public class PacketPlayerPositionAndLook implements PacketOut {
     private float yaw;
     private float pitch;
     private int teleportId;
-
-    public PacketPlayerPositionAndLook() {
-    }
-
-    public PacketPlayerPositionAndLook(double x, double y, double z, float yaw, float pitch, int teleportId) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.yaw = yaw;
-        this.pitch = pitch;
-        this.teleportId = teleportId;
-    }
 
     @Override
     public void encode(ByteMessage msg, Version version) {

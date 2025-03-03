@@ -17,30 +17,20 @@
 
 package ua.nanit.limbo.protocol.packets.play;
 
+import java.util.UUID;
+
+import lombok.Setter;
 import ua.nanit.limbo.protocol.ByteMessage;
 import ua.nanit.limbo.protocol.NbtMessage;
 import ua.nanit.limbo.protocol.PacketOut;
 import ua.nanit.limbo.protocol.registry.Version;
 
-import java.util.UUID;
-
+@Setter
 public class PacketChatMessage implements PacketOut {
 
     private NbtMessage message;
     private PositionLegacy position;
     private UUID sender;
-
-    public void setMessage(NbtMessage message) {
-        this.message = message;
-    }
-
-    public void setPosition(PositionLegacy position) {
-        this.position = position;
-    }
-
-    public void setSender(UUID sender) {
-        this.sender = sender;
-    }
 
     @Override
     public void encode(ByteMessage msg, Version version) {
