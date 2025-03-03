@@ -45,6 +45,8 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
@@ -330,18 +332,27 @@ public class ClientConnection extends ChannelInboundHandlerAdapter {
         buf.readBytes(signature);
         byte[] data = new byte[buf.readableBytes()];
         buf.getBytes(buf.readerIndex(), data);
-        try {
-            Mac mac = Mac.getInstance("HmacSHA256");
-            mac.init(new SecretKeySpec(server.getConfig().getInfoForwarding().getSecretKey(), "HmacSHA256"));
-            byte[] mySignature = mac.doFinal(data);
-            if (!MessageDigest.isEqual(signature, mySignature))
-                return false;
-        } catch (InvalidKeyException | java.security.NoSuchAlgorithmException e) {
-            throw new AssertionError(e);
+
+        List<byte[]> secretKeys = server.getConfig().getInfoForwarding().getSecretKeys();
+        boolean validKey = false;
+
+        for (byte[] secretKey : secretKeys) {
+            try {
+                Mac mac = Mac.getInstance("HmacSHA256");
+                mac.init(new SecretKeySpec(secretKey, "HmacSHA256"));
+                byte[] mySignature = mac.doFinal(data);
+                if (MessageDigest.isEqual(signature, mySignature)) {
+                    validKey = true;
+                    break;
+                }
+            } catch (InvalidKeyException | java.security.NoSuchAlgorithmException e) {
+                throw new AssertionError(e);
+            }
         }
+
         int version = buf.readVarInt();
         if (version != 1)
             throw new IllegalStateException("Unsupported forwarding version " + version + ", wanted " + '\001');
-        return true;
+        return validKey;
     }
 }

@@ -23,19 +23,20 @@ import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
 public class InfoForwarding {
 
     private Type type;
-    private byte[] secretKey;
+    private List<byte[]> secretKey;
     private List<String> tokens;
 
     public Type getType() {
         return type;
     }
 
-    public byte[] getSecretKey() {
+    public List<byte[]> getSecretKeys() {
         return secretKey;
     }
 
@@ -83,7 +84,14 @@ public class InfoForwarding {
             }
 
             if (forwarding.type == Type.MODERN) {
-                forwarding.secretKey = node.node("secret").getString("").getBytes(StandardCharsets.UTF_8);
+                List<String> secrets = node.node("secret").getList(String.class);
+                List<byte[]> keys = new ArrayList<>();
+                if (secrets != null) {
+                    for (String secret : secrets) {
+                        keys.add(secret.getBytes(StandardCharsets.UTF_8));
+                    }
+                }
+                forwarding.secretKey = keys;
             }
 
             if (forwarding.type == Type.BUNGEE_GUARD) {
