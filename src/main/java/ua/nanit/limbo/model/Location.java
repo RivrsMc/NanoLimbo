@@ -18,6 +18,10 @@ public class Location implements Cloneable {
     private float yaw;
     private float pitch;
 
+    public Location(double x, double y, double z) {
+        this(x, y, z, 0, 0);
+    }
+
     public Location add(double x, double y, double z) {
         this.x += x;
         this.y += y;

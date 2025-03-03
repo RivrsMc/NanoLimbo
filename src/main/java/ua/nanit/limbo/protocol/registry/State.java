@@ -17,6 +17,9 @@
 
 package ua.nanit.limbo.protocol.registry;
 
+import java.util.*;
+import java.util.function.Supplier;
+
 import ua.nanit.limbo.protocol.Packet;
 import ua.nanit.limbo.protocol.packets.PacketHandshake;
 import ua.nanit.limbo.protocol.packets.configuration.PacketFinishConfiguration;
@@ -27,10 +30,6 @@ import ua.nanit.limbo.protocol.packets.play.*;
 import ua.nanit.limbo.protocol.packets.status.PacketStatusPing;
 import ua.nanit.limbo.protocol.packets.status.PacketStatusRequest;
 import ua.nanit.limbo.protocol.packets.status.PacketStatusResponse;
-
-import java.util.*;
-import java.util.function.Supplier;
-
 import static ua.nanit.limbo.protocol.registry.Version.*;
 
 public enum State {
@@ -148,6 +147,9 @@ public enum State {
                     map(0x15, V1_20_3, V1_20_3),
                     map(0x18, V1_20_5, V1_21),
                     map(0x1A, V1_21_2, V1_21_4)
+            );
+            serverBound.register(PacketInteractEntity::new,
+                    map(0x18, V1_21_2, V1_21_4)
             );
 
             clientBound.register(PacketDeclareCommands::new,
@@ -367,6 +369,15 @@ public enum State {
                     map(0x25, V1_20_3, V1_20_3),
                     map(0x27, V1_20_5, V1_21),
                     map(0x28, V1_21_2, V1_21_4)
+            );
+            clientBound.register(PacketSpawnEntity::new,
+                    map(0x01, V1_21_2, V1_21_4)
+            );
+            clientBound.register(PacketTeleportEntity::new,
+                    map(0x20, V1_21_2, V1_21_4)
+            );
+            clientBound.register(PacketDestroyEntities::new,
+                    map(0x47, V1_21_2, V1_21_4)
             );
         }
     };
