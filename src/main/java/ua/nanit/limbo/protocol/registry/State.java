@@ -382,6 +382,12 @@ public enum State {
             clientBound.register(PacketMetadata::new,
                     map(0x5D, V1_21_2, V1_21_4)
             );
+            clientBound.register(PacketCloseContainer::new,
+                    map(0x13, V1_21_2, V1_21_4)
+            );
+            clientBound.register(PacketOpenContainer::new,
+                    map(0x35, V1_21_2, V1_21_4)
+            );
         }
     };
 

@@ -9,7 +9,6 @@ import ua.nanit.limbo.model.metadata.EntityData;
 import ua.nanit.limbo.protocol.ByteMessage;
 import ua.nanit.limbo.protocol.PacketOut;
 import ua.nanit.limbo.protocol.registry.Version;
-import ua.nanit.limbo.server.Log;
 
 @Data
 @AllArgsConstructor
@@ -24,10 +23,10 @@ public class PacketMetadata implements PacketOut {
         msg.writeVarInt(this.id);
         for (EntityData data : entityData) {
             msg.writeByte(data.getIndex());
-            msg.writeVarInt(data.getType().getId());
+            msg.writeVarInt(data.getType().id());
 
 
-            data.getType().getDataSerializer().accept(msg, data.getValue());
+            data.getType().dataSerializer().accept(msg, data.getValue());
         }
         msg.writeByte(255);
     }

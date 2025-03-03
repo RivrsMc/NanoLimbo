@@ -43,15 +43,11 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.Getter;
 import ua.nanit.limbo.connection.pipeline.PacketDecoder;
 import ua.nanit.limbo.connection.pipeline.PacketEncoder;
-import ua.nanit.limbo.model.Location;
 import ua.nanit.limbo.protocol.ByteMessage;
 import ua.nanit.limbo.protocol.Packet;
 import ua.nanit.limbo.protocol.PacketSnapshot;
 import ua.nanit.limbo.protocol.packets.login.PacketDisconnect;
-import ua.nanit.limbo.protocol.packets.play.PacketDestroyEntities;
 import ua.nanit.limbo.protocol.packets.play.PacketKeepAlive;
-import ua.nanit.limbo.protocol.packets.play.PacketSpawnEntity;
-import ua.nanit.limbo.protocol.registry.EntityType;
 import ua.nanit.limbo.protocol.registry.State;
 import ua.nanit.limbo.protocol.registry.Version;
 import ua.nanit.limbo.server.LimboServer;
@@ -192,6 +188,7 @@ public class ClientConnection extends ChannelInboundHandlerAdapter {
         } else {
             sendPlayPackets.run();
         }
+
     }
 
     public void onLoginAcknowledgedReceived() {

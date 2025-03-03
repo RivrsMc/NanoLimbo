@@ -38,6 +38,7 @@ import io.netty.handler.codec.EncoderException;
 import io.netty.util.ByteProcessor;
 import net.kyori.adventure.nbt.*;
 import net.kyori.adventure.text.Component;
+import ua.nanit.limbo.model.nbt.NbtComponentSerializer;
 import ua.nanit.limbo.protocol.registry.Version;
 
 public class ByteMessage extends ByteBuf {
@@ -171,6 +172,10 @@ public class ByteMessage extends ByteBuf {
         return ret;
     }
 
+    public Component readComponent() {
+        return NbtComponentSerializer.nbt().deserialize(readCompoundTag());
+    }
+
     public void writeStringsArray(String[] stringArray) {
         writeVarInt(stringArray.length);
         for (String str : stringArray) {
@@ -289,6 +294,10 @@ public class ByteMessage extends ByteBuf {
         }
 
         writeFixedBitSet(bits, enums.length, buf);
+    }
+
+    public void writeComponent(Component component) {
+        writeNamelessCompoundTag(NbtComponentSerializer.nbt().serialize(component));
     }
 
     private static void writeFixedBitSet(BitSet bits, int size, ByteBuf buf) {

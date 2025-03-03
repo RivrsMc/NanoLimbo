@@ -1,12 +1,10 @@
 package ua.nanit.limbo.model.metadata;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+import net.kyori.adventure.text.Component;
 import ua.nanit.limbo.protocol.ByteMessage;
 
 public class EntityDataTypes {
@@ -24,6 +22,8 @@ public class EntityDataTypes {
 
     public static final EntityDataType<String> STRING = define("string", ByteMessage::readString, ByteMessage::writeString);
 
+    public static final EntityDataType<Component> COMPONENT = define("component", ByteMessage::readComponent, ByteMessage::writeComponent);
+
     public static Collection<EntityDataType<?>> values() {
         return Collections.unmodifiableCollection(ENTITY_DATA_TYPE_MAP.values());
     }
@@ -38,10 +38,10 @@ public class EntityDataTypes {
 
            EntityDataType<T> type = new EntityDataType<>(name, dataType.ordinal(), deserializer,
                    (BiConsumer<ByteMessage, Object>) serializer);
-           ENTITY_DATA_TYPE_MAP.put(type.getName(), type);
+           ENTITY_DATA_TYPE_MAP.put(type.name(), type);
            Map<Integer, EntityDataType<?>> typeIdMap = ENTITY_DATA_TYPE_ID_MAP
                    .computeIfAbsent((byte) dataType.ordinal(), k -> new HashMap<>());
-           typeIdMap.put(type.getId(), type);
+           typeIdMap.put(type.id(), type);
            return type;
        }catch (Exception e) {
            throw new RuntimeException(e);
