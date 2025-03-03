@@ -21,10 +21,8 @@ import io.netty.buffer.Unpooled;
 import ua.nanit.limbo.LimboConstants;
 import ua.nanit.limbo.protocol.packets.PacketHandshake;
 import ua.nanit.limbo.protocol.packets.configuration.PacketFinishConfiguration;
-import ua.nanit.limbo.protocol.packets.login.PacketLoginAcknowledged;
-import ua.nanit.limbo.protocol.packets.login.PacketLoginPluginRequest;
-import ua.nanit.limbo.protocol.packets.login.PacketLoginPluginResponse;
-import ua.nanit.limbo.protocol.packets.login.PacketLoginStart;
+import ua.nanit.limbo.protocol.packets.configuration.PacketPlayerLoaded;
+import ua.nanit.limbo.protocol.packets.login.*;
 import ua.nanit.limbo.protocol.packets.status.PacketStatusPing;
 import ua.nanit.limbo.protocol.packets.status.PacketStatusRequest;
 import ua.nanit.limbo.protocol.packets.status.PacketStatusResponse;
@@ -135,6 +133,9 @@ public class PacketHandler {
 
     public void handle(ClientConnection conn, PacketFinishConfiguration packet) {
         conn.spawnPlayer();
+    }
+
+    public void handle(ClientConnection conn, PacketPlayerLoaded packet) {
     }
 
 }

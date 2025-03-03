@@ -925,12 +925,6 @@
                 element: {
                     precipitation: "none",
                     effects: {
-                        music: {
-                            replace_current_music: 0b,
-                            max_delay: 24000,
-                            sound: "minecraft:music.nether.nether_wastes",
-                            min_delay: 12000
-                        },
                         sky_color: 7254527,
                         ambient_sound: "minecraft:ambient.nether_wastes.loop",
                         additions_sound: {
@@ -2629,12 +2623,6 @@
                 element: {
                     precipitation: "none",
                     effects: {
-                        music: {
-                            replace_current_music: 0b,
-                            max_delay: 24000,
-                            sound: "minecraft:music.nether.soul_sand_valley",
-                            min_delay: 12000
-                        },
                         sky_color: 7254527,
                         ambient_sound: "minecraft:ambient.soul_sand_valley.loop",
                         additions_sound: {
@@ -2671,12 +2659,6 @@
                 element: {
                     precipitation: "none",
                     effects: {
-                        music: {
-                            replace_current_music: 0b,
-                            max_delay: 24000,
-                            sound: "minecraft:music.nether.crimson_forest",
-                            min_delay: 12000
-                        },
                         sky_color: 7254527,
                         ambient_sound: "minecraft:ambient.crimson_forest.loop",
                         additions_sound: {
@@ -2713,12 +2695,6 @@
                 element: {
                     precipitation: "none",
                     effects: {
-                        music: {
-                            replace_current_music: 0b,
-                            max_delay: 24000,
-                            sound: "minecraft:music.nether.warped_forest",
-                            min_delay: 12000
-                        },
                         sky_color: 7254527,
                         ambient_sound: "minecraft:ambient.warped_forest.loop",
                         additions_sound: {
@@ -2755,12 +2731,6 @@
                 element: {
                     precipitation: "none",
                     effects: {
-                        music: {
-                            replace_current_music: 0b,
-                            max_delay: 24000,
-                            sound: "minecraft:music.nether.basalt_deltas",
-                            min_delay: 12000
-                        },
                         sky_color: 7254527,
                         ambient_sound: "minecraft:ambient.basalt_deltas.loop",
                         additions_sound: {
@@ -2788,6 +2758,31 @@
                     scale: 0.2f,
                     downfall: 0.0f,
                     category: "nether",
+                    has_precipitation: 0
+                }
+            },
+            {
+                name: "minecraft:pale_garden",
+                id: 4,
+                element: {
+                    precipitation: "rain",
+                    effects: {
+                        sky_color: 7972607,
+                        water_fog_color: 329011,
+                        fog_color: 12638463,
+                        water_color: 4159204,
+                        mood_sound: {
+                            tick_delay: 6000,
+                            offset: 2.0d,
+                            sound: "minecraft:ambient.cave",
+                            block_search_extent: 8
+                        }
+                    },
+                    depth: 0.1f,
+                    temperature: 0.7f,
+                    scale: 0.2f,
+                    downfall: 0.8f,
+                    category: "forest",
                     has_precipitation: 0
                 }
             }
