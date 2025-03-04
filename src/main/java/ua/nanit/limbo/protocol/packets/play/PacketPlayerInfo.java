@@ -20,7 +20,9 @@ package ua.nanit.limbo.protocol.packets.play;
 import java.util.EnumSet;
 import java.util.UUID;
 
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import ua.nanit.limbo.model.player.GameMode;
 import ua.nanit.limbo.protocol.ByteMessage;
 import ua.nanit.limbo.protocol.PacketOut;
 import ua.nanit.limbo.protocol.registry.Version;
@@ -28,12 +30,13 @@ import ua.nanit.limbo.protocol.registry.Version;
 /**
  * This packet was very simplified and using only for ADD_PLAYER action
  */
-@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class PacketPlayerInfo implements PacketOut {
 
-    private int gameMode = 3;
-    private String username = "";
     private UUID uuid;
+    private String username;
+    private GameMode gameMode = GameMode.SURVIVAL;
 
     @Override
     public void encode(ByteMessage msg, Version version) {
@@ -55,7 +58,7 @@ public class PacketPlayerInfo implements PacketOut {
                 msg.writeVarInt(0); //Properties (0 is empty)
 
                 msg.writeBoolean(true); //Update listed
-                msg.writeVarInt(gameMode); //Gamemode
+                msg.writeVarInt(gameMode.getId()); //Gamemode
                 return;
             }
             
@@ -64,7 +67,7 @@ public class PacketPlayerInfo implements PacketOut {
             msg.writeUuid(uuid);
             msg.writeString(username);
             msg.writeVarInt(0);
-            msg.writeVarInt(gameMode);
+            msg.writeVarInt(gameMode.getId());
             msg.writeVarInt(60);
             msg.writeBoolean(false);
             

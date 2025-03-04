@@ -21,13 +21,6 @@ public class PacketMetadata implements PacketOut {
     @Override
     public void encode(ByteMessage msg, Version version) {
         msg.writeVarInt(this.id);
-        for (EntityData data : entityData) {
-            msg.writeByte(data.getIndex());
-            msg.writeVarInt(data.getType().id());
-
-
-            data.getType().dataSerializer().accept(msg, data.getValue());
-        }
-        msg.writeByte(255);
+        msg.writeMetadata(this.entityData);
     }
 }

@@ -25,7 +25,6 @@ import ua.nanit.limbo.server.LimboServer;
 public class PacketStatusResponse implements PacketOut {
 
     private static final String TEMPLATE = "{ \"version\": { \"name\": \"%s\", \"protocol\": %d }, \"players\": { \"max\": %d, \"online\": %d, \"sample\": [] }, \"description\": %s }";
-
     private LimboServer server;
 
     public PacketStatusResponse() { }

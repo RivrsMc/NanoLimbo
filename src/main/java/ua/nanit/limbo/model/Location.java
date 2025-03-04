@@ -182,6 +182,10 @@ public class Location implements Cloneable {
         return pitch;
     }
 
+    public Vector toVector() {
+        return new Vector(x, y, z);
+    }
+
     @Override
     protected Object clone() throws CloneNotSupportedException {
         Location location = (Location) super.clone();

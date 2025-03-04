@@ -17,16 +17,6 @@
 
 package ua.nanit.limbo.configuration;
 
-import org.spongepowered.configurate.ConfigurationNode;
-import org.spongepowered.configurate.ConfigurationOptions;
-import org.spongepowered.configurate.serialize.TypeSerializerCollection;
-import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
-import ua.nanit.limbo.util.Colors;
-import ua.nanit.limbo.server.data.BossBar;
-import ua.nanit.limbo.server.data.InfoForwarding;
-import ua.nanit.limbo.server.data.PingData;
-import ua.nanit.limbo.server.data.Title;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -36,7 +26,24 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.spongepowered.configurate.ConfigurationNode;
+import org.spongepowered.configurate.ConfigurationOptions;
+import org.spongepowered.configurate.serialize.TypeSerializerCollection;
+import org.spongepowered.configurate.yaml.YamlConfigurationLoader;
+
+import lombok.Getter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import ua.nanit.limbo.server.data.BossBar;
+import ua.nanit.limbo.server.data.InfoForwarding;
+import ua.nanit.limbo.server.data.PingData;
+import ua.nanit.limbo.server.data.Title;
+import ua.nanit.limbo.util.Colors;
+
+@Getter
 public final class LimboConfig {
+
+    private static final MiniMessage MINI_MESSAGE = MiniMessage.miniMessage();
 
     private final Path root;
 
@@ -60,8 +67,8 @@ public final class LimboConfig {
     private Title title;
 
     private String playerListUsername;
-    private String playerListHeader;
-    private String playerListFooter;
+    private Component playerListHeader;
+    private Component playerListFooter;
 
     private InfoForwarding infoForwarding;
     private long readTimeout;
@@ -121,8 +128,8 @@ public final class LimboConfig {
             title = conf.node("title").get(Title.class);
 
         if (useHeaderAndFooter) {
-            playerListHeader = Colors.of(conf.node("headerAndFooter", "header").getString());
-            playerListFooter = Colors.of(conf.node("headerAndFooter", "footer").getString());
+            playerListHeader = MINI_MESSAGE.deserialize(conf.node("headerAndFooter", "header").getString());
+            playerListFooter = MINI_MESSAGE.deserialize(conf.node("headerAndFooter", "footer").getString());
         }
 
         infoForwarding = conf.node("infoForwarding").get(InfoForwarding.class);
@@ -163,117 +170,5 @@ public final class LimboConfig {
                 .register(BossBar.class, new BossBar.Serializer())
                 .register(Title.class, new Title.Serializer())
                 .build();
-    }
-
-    public SocketAddress getAddress() {
-        return address;
-    }
-
-    public int getMaxPlayers() {
-        return maxPlayers;
-    }
-
-    public PingData getPingData() {
-        return pingData;
-    }
-
-    public String getDimensionType() {
-        return dimensionType;
-    }
-
-    public int getGameMode() {
-        return gameMode;
-    }
-
-    public InfoForwarding getInfoForwarding() {
-        return infoForwarding;
-    }
-
-    public long getReadTimeout() {
-        return readTimeout;
-    }
-
-    public int getDebugLevel() {
-        return debugLevel;
-    }
-
-    public boolean isUseBrandName() {
-        return useBrandName;
-    }
-
-    public boolean isUseJoinMessage() {
-        return useJoinMessage;
-    }
-
-    public boolean isUseBossBar() {
-        return useBossBar;
-    }
-
-    public boolean isUseTitle() {
-        return useTitle;
-    }
-
-    public boolean isUsePlayerList() {
-        return usePlayerList;
-    }
-
-    public boolean isUseHeaderAndFooter() {
-        return useHeaderAndFooter;
-    }
-
-    public String getBrandName() {
-        return brandName;
-    }
-
-    public String getJoinMessage() {
-        return joinMessage;
-    }
-
-    public BossBar getBossBar() {
-        return bossBar;
-    }
-
-    public Title getTitle() {
-        return title;
-    }
-
-    public String getPlayerListUsername() {
-        return playerListUsername;
-    }
-
-    public String getPlayerListHeader() {
-        return playerListHeader;
-    }
-
-    public String getPlayerListFooter() {
-        return playerListFooter;
-    }
-
-    public boolean isUseEpoll() {
-        return useEpoll;
-    }
-
-    public int getBossGroupSize() {
-        return bossGroupSize;
-    }
-
-    public int getWorkerGroupSize() {
-        return workerGroupSize;
-    }
-
-    public boolean isUseTrafficLimits() {
-        return useTrafficLimits;
-    }
-
-    public int getMaxPacketSize() {
-        return maxPacketSize;
-    }
-
-    public double getInterval() {
-        return interval;
-    }
-
-    public double getMaxPacketRate() {
-        return maxPacketRate;
     }
 }

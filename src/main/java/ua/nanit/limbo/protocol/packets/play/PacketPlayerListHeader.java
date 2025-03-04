@@ -17,21 +17,23 @@
 
 package ua.nanit.limbo.protocol.packets.play;
 
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import net.kyori.adventure.text.Component;
 import ua.nanit.limbo.protocol.ByteMessage;
-import ua.nanit.limbo.protocol.NbtMessage;
 import ua.nanit.limbo.protocol.PacketOut;
 import ua.nanit.limbo.protocol.registry.Version;
 
-@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class PacketPlayerListHeader implements PacketOut {
 
-    private NbtMessage header;
-    private NbtMessage footer;
+    private Component header;
+    private Component footer;
 
     @Override
     public void encode(ByteMessage msg, Version version) {
-        msg.writeNbtMessage(header, version);
-        msg.writeNbtMessage(footer, version);
+        msg.writeComponent(header);
+        msg.writeComponent(footer);
     }
 }

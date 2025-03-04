@@ -27,10 +27,10 @@ import java.nio.channels.GatheringByteChannel;
 import java.nio.channels.ScatteringByteChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.BitSet;
-import java.util.EnumSet;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.BiConsumer;
+
+import org.jetbrains.annotations.Nullable;
 
 import io.netty.buffer.*;
 import io.netty.handler.codec.DecoderException;
@@ -38,8 +38,10 @@ import io.netty.handler.codec.EncoderException;
 import io.netty.util.ByteProcessor;
 import net.kyori.adventure.nbt.*;
 import net.kyori.adventure.text.Component;
+import ua.nanit.limbo.model.metadata.EntityData;
 import ua.nanit.limbo.model.nbt.NbtComponentSerializer;
 import ua.nanit.limbo.protocol.registry.Version;
+import ua.nanit.limbo.util.StringUtils;
 
 public class ByteMessage extends ByteBuf {
 
@@ -131,6 +133,24 @@ public class ByteMessage extends ByteBuf {
         buf.writeCharSequence(str, StandardCharsets.UTF_8);
     }
 
+    public void writeString(String str, int length) {
+        writeString(str, length, true);
+    }
+
+
+    public void writeString(String s, int maxLen, boolean substr) {
+        if (substr) {
+            s = StringUtils.maximizeLength(s, maxLen);
+        }
+        byte[] bytes = s.getBytes(StandardCharsets.UTF_8);
+        if (!substr && bytes.length > maxLen) {
+            throw new IllegalStateException("String too big (was " + bytes.length + " bytes encoded, max " + maxLen + ")");
+        } else {
+            writeVarInt(bytes.length);
+            buf.writeCharSequence(s, StandardCharsets.UTF_8);
+        }
+    }
+
     public byte[] readBytesArray() {
         int length = readVarInt();
         byte[] array = new byte[length];
@@ -204,8 +224,7 @@ public class ByteMessage extends ByteBuf {
             for (CompoundBinaryTag tag : compoundTags) {
                 BinaryTagIO.writer().write(tag, (OutputStream) stream);
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new EncoderException("Cannot write NBT CompoundTag");
         }
     }
@@ -213,8 +232,7 @@ public class ByteMessage extends ByteBuf {
     public CompoundBinaryTag readCompoundTag() {
         try (ByteBufInputStream stream = new ByteBufInputStream(buf)) {
             return BinaryTagIO.reader().read((InputStream) stream);
-        }
-        catch (IOException thrown) {
+        } catch (IOException thrown) {
             throw new DecoderException("Cannot read NBT CompoundTag");
         }
     }
@@ -222,8 +240,7 @@ public class ByteMessage extends ByteBuf {
     public void writeCompoundTag(CompoundBinaryTag compoundTag) {
         try (ByteBufOutputStream stream = new ByteBufOutputStream(buf)) {
             BinaryTagIO.writer().write(compoundTag, (OutputStream) stream);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new EncoderException("Cannot write NBT CompoundTag");
         }
     }
@@ -236,42 +253,33 @@ public class ByteMessage extends ByteBuf {
             if (binaryTag instanceof CompoundBinaryTag) {
                 CompoundBinaryTag tag = (CompoundBinaryTag) binaryTag;
                 tag.type().write(tag, stream);
-            }
-            else if (binaryTag instanceof ByteBinaryTag) {
+            } else if (binaryTag instanceof ByteBinaryTag) {
                 ByteBinaryTag tag = (ByteBinaryTag) binaryTag;
                 tag.type().write(tag, stream);
-            }
-            else if (binaryTag instanceof ShortBinaryTag) {
+            } else if (binaryTag instanceof ShortBinaryTag) {
                 ShortBinaryTag tag = (ShortBinaryTag) binaryTag;
                 tag.type().write(tag, stream);
-            }
-            else  if (binaryTag instanceof IntBinaryTag) {
+            } else if (binaryTag instanceof IntBinaryTag) {
                 IntBinaryTag tag = (IntBinaryTag) binaryTag;
                 tag.type().write(tag, stream);
-            }
-            else if (binaryTag instanceof LongBinaryTag) {
+            } else if (binaryTag instanceof LongBinaryTag) {
                 LongBinaryTag tag = (LongBinaryTag) binaryTag;
                 tag.type().write(tag, stream);
-            }
-            else if (binaryTag instanceof DoubleBinaryTag) {
+            } else if (binaryTag instanceof DoubleBinaryTag) {
                 DoubleBinaryTag tag = (DoubleBinaryTag) binaryTag;
                 tag.type().write(tag, stream);
-            }
-            else if (binaryTag instanceof StringBinaryTag) {
+            } else if (binaryTag instanceof StringBinaryTag) {
                 StringBinaryTag tag = (StringBinaryTag) binaryTag;
                 tag.type().write(tag, stream);
-            }
-            else if (binaryTag instanceof ListBinaryTag) {
+            } else if (binaryTag instanceof ListBinaryTag) {
                 ListBinaryTag tag = (ListBinaryTag) binaryTag;
                 tag.type().write(tag, stream);
-            }
-            else if (binaryTag instanceof EndBinaryTag) {
+            } else if (binaryTag instanceof EndBinaryTag) {
                 EndBinaryTag tag = (EndBinaryTag) binaryTag;
                 tag.type().write(tag, stream);
             }
 
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new EncoderException("Cannot write NBT CompoundTag");
         }
     }
@@ -279,8 +287,7 @@ public class ByteMessage extends ByteBuf {
     public void writeNbtMessage(NbtMessage nbtMessage, Version version) {
         if (version.moreOrEqual(Version.V1_20_3)) {
             writeNamelessCompoundTag(nbtMessage.getTag());
-        }
-        else {
+        } else {
             writeString(nbtMessage.getJson());
         }
     }
@@ -299,6 +306,34 @@ public class ByteMessage extends ByteBuf {
     public void writeComponent(Component component) {
         writeNamelessCompoundTag(NbtComponentSerializer.nbt().serialize(component));
     }
+
+    public <K> void writeList(List<K> list, BiConsumer<ByteMessage, K> writer) {
+        writeVarInt(list.size());
+        for (K k : list) {
+            writer.accept(this, k);
+        }
+    }
+
+    public <V> void writeOptional(@Nullable V value, BiConsumer<ByteMessage, V> writer) {
+        if (value == null) {
+            this.writeBoolean(false);
+            return;
+        }
+
+        this.writeBoolean(true);
+        writer.accept(this, value);
+    }
+
+    public void writeMetadata(List<EntityData> entityData) {
+        for (EntityData data : entityData) {
+            this.writeByte(data.getIndex());
+            this.writeVarInt(data.getType().id());
+
+            data.getType().dataSerializer().accept(this, data.getValue());
+        }
+        this.writeByte(255);
+    }
+
 
     private static void writeFixedBitSet(BitSet bits, int size, ByteBuf buf) {
         if (bits.length() > size) {

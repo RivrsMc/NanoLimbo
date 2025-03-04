@@ -17,42 +17,23 @@
 
 package ua.nanit.limbo.server.data;
 
+import java.lang.reflect.Type;
+
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.spongepowered.configurate.ConfigurationNode;
 import org.spongepowered.configurate.serialize.TypeSerializer;
+
+import lombok.Getter;
+import lombok.Setter;
 import ua.nanit.limbo.util.Colors;
 
-import java.lang.reflect.Type;
-
+@Getter
+@Setter
 public class PingData {
 
     private String version;
     private String description;
     private int protocol;
-
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public int getProtocol() {
-        return protocol;
-    }
-
-    public void setProtocol(int protocol) {
-        this.protocol = protocol;
-    }
 
     public static class Serializer implements TypeSerializer<PingData> {
 

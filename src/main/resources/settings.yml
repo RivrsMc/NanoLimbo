@@ -13,7 +13,7 @@ maxPlayers: 100
 
 # Server's data in servers list
 ping:
-  description: '{"text": "&9NanoLimbo"}'
+  description: '<rainbow>NanoLimbo'
   version: 'NanoLimbo'
   # Return static protocol version number in ping result
   # By default, its -1 to return the client version if it supported
@@ -33,8 +33,8 @@ playerList:
 # For 1.8+ clients
 headerAndFooter:
   enable: false
-  header: '{"text": "&eWelcome!"}'
-  footer: '{"text": "&9NanoLimbo"}'
+  header: '<rainbow>Welcome'
+  footer: '<aqua>NanoLimbo'
 
 # Setup player's game mode
 # 0 - Survival

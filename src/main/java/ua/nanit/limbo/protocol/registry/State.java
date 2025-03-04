@@ -388,6 +388,9 @@ public enum State {
             clientBound.register(PacketOpenContainer::new,
                     map(0x35, V1_21_2, V1_21_4)
             );
+            clientBound.register(PacketPlayerInfoRemove::new,
+                    map(0x3F, V1_21_2, V1_21_4)
+            );
         }
     };
 

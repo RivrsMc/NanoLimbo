@@ -17,10 +17,17 @@
 
 package ua.nanit.limbo.connection;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
+
 import net.kyori.adventure.nbt.BinaryTag;
 import net.kyori.adventure.nbt.CompoundBinaryTag;
 import net.kyori.adventure.nbt.ListBinaryTag;
 import ua.nanit.limbo.LimboConstants;
+import ua.nanit.limbo.model.player.GameMode;
 import ua.nanit.limbo.protocol.PacketSnapshot;
 import ua.nanit.limbo.protocol.packets.configuration.PacketFinishConfiguration;
 import ua.nanit.limbo.protocol.packets.configuration.PacketRegistryData;
@@ -31,12 +38,6 @@ import ua.nanit.limbo.server.data.Title;
 import ua.nanit.limbo.util.NbtMessageUtil;
 import ua.nanit.limbo.util.UuidUtil;
 import ua.nanit.limbo.world.Dimension;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
 
 public final class PacketSnapshots {
 
@@ -73,7 +74,7 @@ public final class PacketSnapshots {
     private PacketSnapshots() { }
 
     public static void initPackets(LimboServer server) {
-        final String username = server.getConfig().getPingData().getVersion();
+        final String username = server.getConfig().getPlayerListUsername();
         final UUID uuid = UuidUtil.getOfflineModeUuid(username);
 
         PacketLoginSuccess loginSuccess = new PacketLoginSuccess();
@@ -115,10 +116,11 @@ public final class PacketSnapshots {
         PacketDeclareCommands declareCommands = new PacketDeclareCommands();
         declareCommands.setCommands(Collections.emptyList());
 
-        PacketPlayerInfo info = new PacketPlayerInfo();
-        info.setUsername(server.getConfig().getPlayerListUsername());
-        info.setGameMode(server.getConfig().getGameMode());
-        info.setUuid(uuid);
+        PacketPlayerInfo info = new PacketPlayerInfo(
+                uuid,
+                server.getConfig().getPlayerListUsername(),
+                GameMode.getById(server.getConfig().getGameMode())
+        );
 
         PACKET_LOGIN_SUCCESS = PacketSnapshot.of(loginSuccess);
         PACKET_JOIN_GAME = PacketSnapshot.of(joinGame);
@@ -131,9 +133,10 @@ public final class PacketSnapshots {
         PACKET_DECLARE_COMMANDS = PacketSnapshot.of(declareCommands);
 
         if (server.getConfig().isUseHeaderAndFooter()) {
-            PacketPlayerListHeader header = new PacketPlayerListHeader();
-            header.setHeader(NbtMessageUtil.create(server.getConfig().getPlayerListHeader()));
-            header.setFooter(NbtMessageUtil.create(server.getConfig().getPlayerListFooter()));
+            PacketPlayerListHeader header = new PacketPlayerListHeader(
+                    server.getConfig().getPlayerListHeader(),
+                    server.getConfig().getPlayerListFooter()
+            );
             PACKET_HEADER_AND_FOOTER = PacketSnapshot.of(header);
         }
 

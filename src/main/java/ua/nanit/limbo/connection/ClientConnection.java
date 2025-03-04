@@ -43,11 +43,17 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.Getter;
 import ua.nanit.limbo.connection.pipeline.PacketDecoder;
 import ua.nanit.limbo.connection.pipeline.PacketEncoder;
+import ua.nanit.limbo.model.Location;
+import ua.nanit.limbo.model.Vector;
+import ua.nanit.limbo.model.player.GameMode;
 import ua.nanit.limbo.protocol.ByteMessage;
 import ua.nanit.limbo.protocol.Packet;
 import ua.nanit.limbo.protocol.PacketSnapshot;
 import ua.nanit.limbo.protocol.packets.login.PacketDisconnect;
 import ua.nanit.limbo.protocol.packets.play.PacketKeepAlive;
+import ua.nanit.limbo.protocol.packets.play.PacketPlayerInfo;
+import ua.nanit.limbo.protocol.packets.play.PacketSpawnEntity;
+import ua.nanit.limbo.protocol.registry.EntityType;
 import ua.nanit.limbo.protocol.registry.State;
 import ua.nanit.limbo.protocol.registry.Version;
 import ua.nanit.limbo.server.LimboServer;
@@ -188,6 +194,26 @@ public class ClientConnection extends ChannelInboundHandlerAdapter {
         } else {
             sendPlayPackets.run();
         }
+        this.channel.eventLoop().schedule(() -> {
+            UUID uniqueId = UUID.randomUUID();
+            PacketPlayerInfo packetPlayerInfo = new PacketPlayerInfo(
+                    uniqueId,
+                    "jeb_",
+                    GameMode.SURVIVAL
+            );
+            sendPacket(packetPlayerInfo);
+
+            PacketSpawnEntity packetSpawnEntity = new PacketSpawnEntity(
+                    10,
+                    uniqueId,
+                    new Location(2, 400, 0),
+                    EntityType.PLAYER,
+                    0,
+                    0,
+                    Vector.ZERO
+            );
+            sendPacket(packetSpawnEntity);
+        }, 1, TimeUnit.SECONDS);
 
     }
 
